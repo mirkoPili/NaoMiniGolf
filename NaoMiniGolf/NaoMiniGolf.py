@@ -254,32 +254,127 @@ def colpoInizio():
     motionProxy.angleInterpolationWithSpeed(NomiArtoDestro, inclinaPolso, 0.1)
     time.sleep(1)
     wristYaw = ["RWristYaw"]
-    tempo = [2]
+    tempo = [1.5]
     angolazione = [65 * math.pi / 180.0]
     motionProxy.angleInterpolation(wristYaw, angolazione, tempo, True)
 
 def posBraccio():
+    names = list()
+    times = list()
+    keys = list()
 
-    wristYaw = ["RWristYaw"]
-    tempo = [2]
-    angolazione = [-65 * math.pi / 180.0]
-    motionProxy.angleInterpolation(wristYaw, angolazione, tempo, True)
-    time.sleep(1)
-    motionProxy.angleInterpolationWithSpeed(NomiArtoDestro, sollevaBraccio2, 0.2)
+    names.append("HeadPitch")
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
 
+    names.append("HeadYaw")  # movimento dell'asse Z
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("LAnklePitch")  # Asse Z caviglia
+    times.append([1, 2, 3, 4])
+    keys.append([-0.349794, -0.349794, -0.349794, -0.349794])
+
+    names.append("LAnkleRoll")  # Asse X caviglia
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("LElbowRoll")  # Asse Z del gomito
+    times.append([1, 2, 3, 4, 8, 8.5])
+    keys.append([-0.321141, -0.321141, -1.9, -1.9, -1.23490659, -1.51843645])
+
+    names.append("LElbowYaw")  # Asse X
+    times.append([1, 2, 3, 4])
+    keys.append([-1.37757, -1.37757, -1.466076, -1.466076])
+
+    names.append("LHand")  # Palmo sinistro
+    times.append([1, 2, 3, 4, 5.2])
+    keys.append([0.9800, 0.9800, 0.9800, 0.9800, 0.1800])
+
+    names.append("LHipPitch")  # Asse Y della gamba
+    times.append([1, 2, 3, 4])
+    keys.append([-0.450955, -0.450955, -0.450955, -0.450955])
+
+    names.append("LHipRoll")  # Asse X della gamba
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("LHipYawPitch")
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("LShoulderPitch")  # Asse Y del ginocchio
+    times.append([1, 2, 3, 4, 5.2, 8, 8.5])
+    keys.append([1.53885, 1.43885, 1.3, 1.3, 1.3, 1.43856, 1.88495559])
+
+    names.append("LShoulderRoll")  # Asse Z della spalla
+    times.append([1, 2, 3, 4, 5.2])
+    keys.append([0.268407, 0.268407, -0.04014, -0.04014, -0.04014])
+
+    names.append("LWristYaw")  # Asse X del polso
+
+    times.append([1, 2, 3, 4])
+    keys.append([-0.016916, -0.016916, -1.632374, -1.632374])
+
+    names.append("RAnklePitch")  # Asse Y Caviglia
+    times.append([1, 2, 3, 4])
+    keys.append([-0.354312, -0.354312, -0.354312, -0.354312])
+
+    names.append("RAnkleRoll")  # Asse X Caviglia
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("RElbowRoll")  # Asse Z del gomito
+    times.append([1, 2, 3, 4, 8, 8.5])
+    keys.append([0.958791, 0.958791, 0.958791, 0.958791, 1.23490659, 1.51843645])
+
+    names.append("RElbowYaw")  # Asse X del gomito
+    times.append([1, 2, 3, 4])
+    keys.append([1.466076, 1.466076, 1.466076, 1.466076])
+
+    names.append("RHand")
+    times.append([1, 2, 3, 4])
+    keys.append([0.0900, 0.0900, 0.0900, 0.0900])
+
+    names.append("RHipPitch")  # Asse Y della gamba
+    times.append([1, 2, 3, 4])
+    keys.append([-0.451038, -0.451038, -0.451038, -0.451038])
+
+    names.append("RHipRoll")  # Asse X della gamba
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+    names.append("RHipYawPitch")
+    times.append([1, 2, 3, 4])
+    keys.append([0, 0, 0, 0])
+
+
+
+    names.append("RShoulderPitch")  # Asse Y della spalla
+    times.append([0.5, 1, 2, 3, 4, 5.2, 8, 8.5])
+    # keys.append([1.03856, 1.03856, 1.03856, 1.03856, 1.03856])
+    keys.append([0.9, 1.03856, 1.03856, 1.03856, 1.03856, 1.03856, 1.43856, 1.88495559 ])
+
+    names.append("RShoulderRoll")  # Asse Z della spalla
+    times.append([1, 2, 3, 4, 5.2])
+    keys.append([0.04014, 0.04014, 0.04014, 0.04014, 0.04014])
+
+    names.append("RWristYaw")  # Asse X del polso
+    times.append([1, 2, 3, 4])
+    keys.append([1.632374, 1.632374, 1.632374, 1.632374])
+    motionProxy.setMoveArmsEnabled(False, False)
+    motionProxy.angleInterpolation(names, keys, times, True)
 
 def RotazioneRobot():
     motionProxy.angleInterpolationWithSpeed("HeadYaw", 0.0, 0.5)
     # Parametri di camminata del robot
     motionProxy.setMoveArmsEnabled(False, False)
     global passoRobotLungo
-    motionProxy.moveTo(0.0, 0.0, 1, passoRobotCorto)
-    time.sleep(0.2)
-    motionProxy.moveTo(0.0, 0.0, 1, passoRobotCorto)
+    motionProxy.moveTo(0.0, 0.0, 2.13, passoRobotCorto)
     motionProxy.setMoveArmsEnabled(False, False)
-    for i in range(4):
-        motionProxy.moveTo(0.5, 0.0, 0.0, passoRobotLungo)
-        time.sleep(0.2)
+    motionProxy.waitUntilMoveIsFinished()
+    motionProxy.moveTo(1, 0.0, 0.0, passoRobotLungo)
+    time.sleep(0.5)
 
 def trovaAsta(rangeDimAsta=[75, 850]):
     TIME = time.strftime('%m-%d_%H-%M-%S', time.localtime(time.time()))
@@ -432,10 +527,10 @@ passoRobotLungo = [["MaxStepX", 0.04], ["MaxStepY", 0.14], ["MaxStepTheta", 0.3]
 passoRobotCorto = [["MaxStepX", 0.02], ["MaxStepY", 0.14], ["MaxStepTheta", 0.3], ["MaxStepFrequency", 0.6],
                    ["StepHeight", 0.018], ["TorsoWx", 0], ["TorsoWy", 0]]
 NomiArtoDestro = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw", "RHand"]
-
+NomiArtoSinistro = ["LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw", "LHand"]
 inclinaPolso = [1.35792, 0.05766, 1.50110, 1.50982, -0.667955, 0.12]
 sollevaBraccio = [1.02599, 0.321235, 1.63107, 1.48231, 0.230070, 0.12]
-sollevaBraccio2 = [2.4, 0.321235, 1.63107, 1.48231, 0.230070, 0.12]
+estendiBraccio= [1.02599, 1.6, 1.63107, 1.48231, 0.230070, 0.12]
 
 
 # ------------------------------------------------------------------------------------------------------------#
