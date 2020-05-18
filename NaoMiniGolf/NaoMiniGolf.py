@@ -10,7 +10,6 @@ import numpy as np
 def StiffnessOn(proxy):  # corpo in posizione rigida
     proxy.stiffnessInterpolation("Body", 1, 1)
 
-
 def PrimaRicercaPalla():
     global numRicercaPalle, passoRobotLungo
     numRicercaPalle += 1  # viene incrementato il tempo di ricerca ogni secondo
@@ -69,14 +68,6 @@ def trovaPalla(angolo, angolo2=0):  # Restituisce i dati della palla rossa
 
 def DistanzaRobotPalla(datiPalla):
     lunCamminata = 0.7
-    # Parametri di camminata del robot
-    maxstepx = 0.04
-    maxstepy = 0.14
-    maxsteptheta = 0.3
-    maxstepfrequency = 0.6
-    stepheight = 0.02
-    torsowx = 0.0
-    torsowy = 0.0
 
     angoloPalla = datiPalla[0]  # Angolo di deflessione della testa
     wzCamera = datiPalla[1][1][0]  # angolo alfa
@@ -85,7 +76,7 @@ def DistanzaRobotPalla(datiPalla):
     x = 0.0
     y = 0.0
     if (angoloPalla[0] + wzCamera < 0.0):
-        theta = angoloPalla[0] + wzCamera + 0.2  # modifica 1
+        theta = angoloPalla[0] + wzCamera
     else:
         theta = angoloPalla[0] + wzCamera
 
@@ -99,7 +90,7 @@ def DistanzaRobotPalla(datiPalla):
     infoPalla = currPalla[1]
     thetah = infoPalla[0]
     thetav = infoPalla[1] + (40 * math.pi / 180.0)  # centro della palla + 40 gradi
-    x = lunCamminata / (math.tan(thetav)) - 0.5  # Minimo 40 cm
+    x = lunCamminata  # Minimo 40 cm
     if (x >= 0):
         theta = 0.0
         motionProxy.setMoveArmsEnabled(False, False)
@@ -126,14 +117,6 @@ def DistanzaRobotPalla(datiPalla):
     # Poi, per la terza volta, il robot corregge l'angolo alla palla rossa.
     motionProxy.moveTo(x, y, theta,passoRobotCorto)
     time.sleep(1.5)
-
-    maxstepx = 0.02
-    maxstepy = 0.14
-    maxsteptheta = 0.15
-    maxstepfrequency = 0.6
-    stepheight = 0.02
-    torsowx = 0.0
-    torsowy = 0.0
 
     currPalla = memoryProxy.getData("redBallDetected")
     infoPalla = currPalla[1]
@@ -179,7 +162,7 @@ def correzionePos():
     motionProxy.setMoveArmsEnabled(False, False)
     val = trovaPalla(0, 30)
     while val == []:
-        motionProxy.moveTo(-0.05, 0, 0, passoRobotCorto)
+        motionProxy.moveTo(-0.2, 0.2, 0, passoRobotCorto)
         val = trovaPalla(0, 30)
     ballinfo = val[1][1]
     thetah = ballinfo[0]  # center X
@@ -187,9 +170,9 @@ def correzionePos():
     x = (h - 0.03) / (math.tan(thetav)) - 0.11
     y = ((h - 0.03) / math.sin(thetav)) * math.tan(thetah)
     if (y > 0):
-        y = ((h - 0.03) / math.sin(thetav)) * math.tan(thetah) + 0.05
+        y = ((h - 0.03) / math.sin(thetav)) * math.tan(thetah) + 0.3
     else:
-        y = ((h - 0.03) / math.sin(thetav)) * math.tan(thetah) + 0.03
+        y = ((h - 0.03) / math.sin(thetav)) * math.tan(thetah) + 0.3
     motionProxy.setMoveArmsEnabled(False, False)
     motionProxy.moveTo(x, 0.0, 0.0,passoRobotCorto)
 
@@ -547,14 +530,14 @@ def trovaAsta(rangeDimAsta=[75, 850]):
 
 
 def CalcolaPosAsta():
-    angoloTesta = 2 / 3 * math.pi  # 120 gradi
-    maxAngle = 0
+    angoloTesta = -120 * math.pi / 180.0 # 120 gradi
+    maxAngle = 60
     motionProxy.angleInterpolationWithSpeed("HeadPitch", 0, 0.5)
     motionProxy.angleInterpolationWithSpeed("HeadYaw", angoloTesta, 0.5)
     time.sleep(0.5)
     angoloAsta = trovaAsta([300, 850])
     while angoloAsta == []:
-        angoloTesta -= 1.0 / 3 * math.pi  # +60 gradi
+        angoloTesta += 1.0 / 3 * math.pi  # +60 gradi
         if angoloTesta > maxAngle:
             return -100
         motionProxy.angleInterpolationWithSpeed("HeadYaw", angoloTesta, 0.5)
@@ -563,7 +546,7 @@ def CalcolaPosAsta():
         angoloAsta = trovaAsta([300, 850])
     angoloRobot = motionProxy.getAngles("HeadYaw", True)
     # Dopo averlo calcolato, gira a sinistra di 90 gradi
-    angoloFinale = angoloRobot[0] + angoloAsta + 0.5 * math.pi
+    angoloFinale = angoloRobot[0] + angoloAsta - 0.5 * math.pi
     rotPostAsta(angoloFinale)
     return angoloFinale
 
@@ -576,12 +559,12 @@ def rotPostAsta(angolo):
     if angolo >= 0:
         while angolo > z:
             angolo -= z
-            motionProxy.moveTo(0, 0, -z)
+            motionProxy.moveTo(0, 0, z)
             time.sleep(1)
     else:
         while angolo < -z:
             angolo += z
-            motionProxy.moveTo(0, 0, z)
+            motionProxy.moveTo(0, 0, -z)
     motionProxy.moveTo(0, 0, angolo)
 
 
@@ -628,7 +611,10 @@ while True:
         if (datiPalla[2] == 0):
             break
     DistanzaRobotPalla(datiPalla)
-
+    correzionePos()
+    CalcolaPosAsta()
+    correzionePos()
+    time.sleep(1)
     CalcolaPosAsta()
     correzionePos()
     time.sleep(1)
